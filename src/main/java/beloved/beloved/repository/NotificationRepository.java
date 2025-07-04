@@ -1,6 +1,6 @@
-package repository;
+package beloved.beloved.repository;
 
-import entity.Notification;
+import beloved.beloved.entity.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

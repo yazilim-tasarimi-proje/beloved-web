@@ -1,4 +1,4 @@
-package service;
+package beloved.beloved.service;
 
 import org.springframework.stereotype.Service;
 

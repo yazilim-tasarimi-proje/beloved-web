@@ -1,9 +1,11 @@
-package entity;
+package beloved.beloved.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
 public class Address {
@@ -18,15 +20,28 @@ public class Address {
     private String country;
     private String phone;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id",nullable = false)
+    private User user;
+
     public Address() {
     }
-    public Address(String street, String city, String state, String postalCode, String country, String phone) {
+    public Address(String street, String city, String state, String postalCode, String country, String phone, User user) {
         this.street = street;
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
         this.country = country;
         this.phone = phone;
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getId() {
@@ -85,3 +100,4 @@ public class Address {
         this.phone = phone;
     }
 }
+

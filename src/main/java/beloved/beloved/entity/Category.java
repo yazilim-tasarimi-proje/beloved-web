@@ -1,9 +1,18 @@
-package entity;
+package beloved.beloved.entity;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 public class Category {
@@ -12,4 +21,54 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    private List<Product> products = new ArrayList<>();
+
+    @ManyToMany()
+    @JoinTable(name = "category_userpreferences",joinColumns = @JoinColumn(name = "category_id") ,
+            inverseJoinColumns = @JoinColumn(name = "userpreferences_id") )
+    private Set<UserPreferences> userPreferences = new HashSet<>();
+
+    public Category(Long id, String name, List<Product> products, Set<UserPreferences> userPreferences) {
+        this.id = id;
+        this.name = name;
+        this.products = products;
+        this.userPreferences = userPreferences;
+    }
+
+    public Category() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
+
+    public Set<UserPreferences> getUserPreferences() {
+        return userPreferences;
+    }
+
+    public void setUserPreferences(Set<UserPreferences> userPreferences) {
+        this.userPreferences = userPreferences;
+    }
 }
