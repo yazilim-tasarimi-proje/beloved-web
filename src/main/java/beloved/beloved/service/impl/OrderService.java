@@ -1,4 +1,4 @@
-package beloved.beloved.service;
+package beloved.beloved.service.impl;
 
 import org.springframework.stereotype.Service;
 

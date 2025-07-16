@@ -14,8 +14,8 @@ public class RelationType {
     private Long id;
     private String name;
 
-    @OneToOne(mappedBy = "relation_type_id")
-    private UserPreferences userPreferences;
+    @OneToOne(mappedBy = "relationType")
+    private UserPreferences userPreferencesSet;
 
     public RelationType() {
     }
@@ -23,7 +23,7 @@ public class RelationType {
     public RelationType(Long id, String name, UserPreferences userPreferences) {
         this.id = id;
         this.name = name;
-        this.userPreferences = userPreferences;
+        this.userPreferencesSet = userPreferences;
     }
 
     public Long getId() {
@@ -42,9 +42,9 @@ public class RelationType {
         this.name = name;
     }
     public UserPreferences getUserPreferences() {
-        return userPreferences;
+        return userPreferencesSet;
     }
     public void setUserPreferences(UserPreferences userPreferences) {
-        this.userPreferences = userPreferences;
+        this.userPreferencesSet = userPreferences;
     }
 }

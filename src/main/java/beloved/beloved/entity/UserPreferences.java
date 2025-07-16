@@ -24,7 +24,7 @@ public class UserPreferences {
    @JoinColumn(name = "relation_type_id")
    private RelationType relationType;
 
-   @ManyToMany(mappedBy = "userPreferences" )
+   @ManyToMany(mappedBy = "userPreferencesSet" )
    private Set<SpecialDay> specialDays=new HashSet<>();
 
 
