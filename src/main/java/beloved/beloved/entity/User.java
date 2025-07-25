@@ -1,7 +1,9 @@
 package beloved.beloved.entity;
 
-
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -9,8 +11,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,9 +28,13 @@ public class User {
 
     private String firstName;
     private String lastName;
+
+    @Column(unique = true,nullable = false)
     private String email;
+
+    @Column(nullable = false)
     private String password;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Address> addresses = new ArrayList<Address>();
@@ -51,8 +57,19 @@ public class User {
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private Set<Recommendation> recommendations = new HashSet<>();
 
+    public enum Role {
+        USER,
+        ADMIN
+    }
 
-    public User(Long id, String firstName, String lastName, String email, String password, LocalDate createdAt, List<Address> addresses, Set<Notification> notification, Cart cart, List<Order> orderList, Set<Favorite> favorites, UserPreferences userPreferences, Set<Recommendation> recommendations) {
+    @Column(nullable = false)
+    private Boolean enabled = true;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+
+    public User(Long id, String firstName, String lastName, String email, String password, LocalDateTime createdAt, List<Address> addresses, Set<Notification> notification, Cart cart, List<Order> orderList, Set<Favorite> favorites, UserPreferences userPreferences, Set<Recommendation> recommendations) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -71,11 +88,11 @@ public class User {
     public User() {
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -173,5 +190,24 @@ public class User {
 
     public void setRecommendations(Set<Recommendation> recommendations) {
         this.recommendations = recommendations;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
+    public boolean isEnabled() {
+        return this.enabled;
     }
 }
