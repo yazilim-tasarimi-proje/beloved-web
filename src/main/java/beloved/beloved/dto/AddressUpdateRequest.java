@@ -1,19 +1,7 @@
-package beloved.beloved.entity;
+package beloved.beloved.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-@Entity
-public class Address {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class AddressUpdateRequest {
+    private Long addressId;
     private String street;
     private String city;
     private String state;
@@ -21,37 +9,25 @@ public class Address {
     private String country;
     private String phone;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id",nullable = false)
-    @JsonIgnore
-    private User user;
-
-    public Address() {
+    public AddressUpdateRequest() {
     }
-    public Address(String street, String city, String state, String postalCode, String country, String phone, User user) {
+
+    public AddressUpdateRequest(Long addressId, String street, String city, String state, String postalCode, String country, String phone) {
+        this.addressId = addressId;
         this.street = street;
         this.city = city;
         this.state = state;
         this.postalCode = postalCode;
         this.country = country;
         this.phone = phone;
-        this.user = user;
     }
 
-    public User getUser() {
-        return user;
+    public Long getAddressId() {
+        return addressId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setAddressId(Long addressId) {
+        this.addressId = addressId;
     }
 
     public String getStreet() {
@@ -102,4 +78,3 @@ public class Address {
         this.phone = phone;
     }
 }
-

@@ -1,13 +1,19 @@
 package beloved.beloved.controller;
 
 
+import beloved.beloved.dto.AddressUpdateRequest;
 import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
+import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
+import beloved.beloved.dto.UserUpdateRequest;
+import beloved.beloved.entity.User;
 import beloved.beloved.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -97,5 +103,30 @@ public class UserController {
         throw new RuntimeException("Authorization header missing or invalid");
     }
 
+    @PutMapping("/update-profile")
+    public ResponseEntity<String> updateUserInfo(@RequestBody UserUpdateRequest request,
+                                                 @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Unauthorized");
+        }
+
+        userService.updateUserInfo(request, userDetails.getUsername());
+        return ResponseEntity.ok("User info updated");
+    }
+
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        User user = userService.getUserProfile(userDetails.getUsername());
+        return ResponseEntity.ok(user);
+    }
+    @PutMapping("/change-password")
+    public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequest request,
+                                                 @AuthenticationPrincipal UserDetails userDetails) {
+        userService.changePassword(request, userDetails.getUsername());
+        return ResponseEntity.ok("Password changed successfully");
+    }
 }
+
+
 
