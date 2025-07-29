@@ -1,13 +1,12 @@
 package beloved.beloved.controller;
 
 
-import beloved.beloved.dto.AddressUpdateRequest;
 import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
 import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
+import beloved.beloved.dto.UserProfileDto;
 import beloved.beloved.dto.UserUpdateRequest;
-import beloved.beloved.entity.User;
 import beloved.beloved.service.impl.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -116,10 +115,11 @@ public class UserController {
 
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
-        User user = userService.getUserProfile(userDetails.getUsername());
-        return ResponseEntity.ok(user);
+    public ResponseEntity<UserProfileDto> getUserProfile(@AuthenticationPrincipal UserDetails userDetails) {
+        UserProfileDto profile = userService.getUserProfile(userDetails.getUsername());
+        return ResponseEntity.ok(profile);
     }
+
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@RequestBody PasswordChangeRequest request,
                                                  @AuthenticationPrincipal UserDetails userDetails) {

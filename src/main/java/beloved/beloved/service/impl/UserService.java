@@ -5,6 +5,7 @@ import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
 import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
+import beloved.beloved.dto.UserProfileDto;
 import beloved.beloved.dto.UserUpdateRequest;
 import beloved.beloved.entity.Address;
 import beloved.beloved.entity.User;
@@ -176,10 +177,13 @@ public class UserService implements IUserService {
 
 
     @Override
-    public User getUserProfile(String userEmail) {
-        return userRepository.findByEmail(userEmail)
+    public UserProfileDto getUserProfile(String userEmail) {
+        User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new UserProfileDto(user.getFirstName(), user.getLastName(), user.getEmail());
     }
+
 
     @Override
     public void changePassword(PasswordChangeRequest request, String userEmail) {

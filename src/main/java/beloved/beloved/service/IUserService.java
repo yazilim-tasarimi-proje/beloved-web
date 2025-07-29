@@ -5,6 +5,7 @@ import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
 import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
+import beloved.beloved.dto.UserProfileDto;
 import beloved.beloved.dto.UserUpdateRequest;
 import beloved.beloved.entity.User;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +19,7 @@ public interface IUserService {
     String forgotPassword(String email);
     String setPassword(String email, String newPassword);
     void updateUserInfo(UserUpdateRequest request, String userEmail); // email JWT'den alınır
-    User getUserProfile(String userEmail);
+    public UserProfileDto getUserProfile(String userEmail);
     void changePassword(PasswordChangeRequest request, String userEmail);
 }
 
