@@ -60,7 +60,7 @@ public class UserService implements IUserService {
 
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    private Set<String> blacklistedTokens = new HashSet<>();
+    private Set<String> blacklistedTokens = new HashSet<>(); //Çıkış yapan ya da silinen kullanıcıların tokenlarını geçersiz kılmak için.
 
     @Override
     public ResponseEntity<String> registerUser(RegisterDto registerDto) {

@@ -1,14 +1,13 @@
 package beloved.beloved.controller;
 
-
 import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
 import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
 import beloved.beloved.dto.UserProfileDto;
 import beloved.beloved.dto.UserUpdateRequest;
+import beloved.beloved.service.impl.JWTUtil;
 import beloved.beloved.service.impl.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,9 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final JWTUtil jwtUtil;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JWTUtil jwtUtil) {
         this.userService = userService;
+        this.jwtUtil = jwtUtil;
     }
 
     @PostMapping("/register")
@@ -43,26 +44,15 @@ public class UserController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.status(400).body("Invalid token");
-        }
-
-        String token = authorizationHeader.substring(7);
-
+        String token = jwtUtil.extractToken(authorizationHeader);
         userService.logout(token);
-
         return ResponseEntity.ok("Logged out successfully");
     }
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteAccount(@RequestHeader("Authorization") String authorizationHeader) {
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            return ResponseEntity.badRequest().body("Invalid token");
-        }
-
-        String token = authorizationHeader.substring(7);
+        String token = jwtUtil.extractToken(authorizationHeader);
         return userService.deleteAccount(token);
     }
-
 
      @PutMapping("/forgot-password")
     public ResponseEntity<String> forgotPassword(@RequestParam String email) {
@@ -94,13 +84,6 @@ public class UserController {
         return "Admin info updated successfully.";
     }
 */
-    private String extractToken(HttpServletRequest request) {
-        String header = request.getHeader("Authorization");
-        if (header != null && header.startsWith("Bearer ")) {
-            return header.substring(7);
-        }
-        throw new RuntimeException("Authorization header missing or invalid");
-    }
 
     @PutMapping("/update-profile")
     public ResponseEntity<String> updateUserInfo(@RequestBody UserUpdateRequest request,
