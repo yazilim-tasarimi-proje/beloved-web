@@ -1,13 +1,13 @@
 package beloved.beloved.service.impl;
 
-import beloved.beloved.dto.AddressUpdateRequest;
+
 import beloved.beloved.dto.AuthResponse;
 import beloved.beloved.dto.LoginDto;
 import beloved.beloved.dto.PasswordChangeRequest;
 import beloved.beloved.dto.RegisterDto;
 import beloved.beloved.dto.UserProfileDto;
 import beloved.beloved.dto.UserUpdateRequest;
-import beloved.beloved.entity.Address;
+
 import beloved.beloved.entity.User;
 import beloved.beloved.repository.AddressRepository;
 import beloved.beloved.repository.UserRepository;
@@ -15,7 +15,7 @@ import beloved.beloved.service.IUserService;
 import beloved.beloved.util.EmailUtil;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import jakarta.mail.MessagingException;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

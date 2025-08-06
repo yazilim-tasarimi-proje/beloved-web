@@ -1,4 +1,4 @@
-package beloved.beloved.config;
+/*package beloved.beloved.config;
 
 
 import org.springframework.context.annotation.Configuration;
@@ -29,4 +29,4 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/uploads/**")
                 .addResourceLocations("file:uploads/");  //resim yüklemek için
     }
-}
+}*/

@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,7 +20,7 @@ public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @OneToOne
     @JoinColumn(name = "user_id")
@@ -28,7 +29,7 @@ public class Cart {
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private Set<CartItem> cartItems = new HashSet<>();
 
-    public Cart(Long id, LocalDate createdAt, User user, Set<CartItem> cartItems) {
+    public Cart(Long id, LocalDateTime createdAt, User user, Set<CartItem> cartItems) {
         this.id = id;
         this.createdAt = createdAt;
         this.user = user;
@@ -54,11 +55,11 @@ public class Cart {
         this.id = id;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDate createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
 
