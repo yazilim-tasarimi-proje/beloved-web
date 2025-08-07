@@ -16,13 +16,13 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    // 1. Sepete Ürün Ekle
+    // 1. Sepete Birden Fazla Ürün Ekle
     @PostMapping("/add")
     public ResponseEntity<CartDto> addToCart(@RequestBody AddToCartRequest request) {
+        // Çoklu ürün ekleme için items listesini parametre olarak veriyoruz
         CartDto updatedCart = cartService.addToCart(
                 request.getEmail(),
-                request.getProductId(),
-                request.getQuantity()
+                request.getItems()
         );
         return ResponseEntity.ok(updatedCart);
     }

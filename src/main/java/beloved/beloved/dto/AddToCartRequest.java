@@ -1,18 +1,16 @@
 package beloved.beloved.dto;
 
-//kullanıcıydan alınacak veriler
+import java.util.List;
+
 public class AddToCartRequest {
     private String email;
-    private Long productId;
-    private int quantity;
+    private List<CartItemDto> items;  // Çoklu ürün listesi
 
-    public AddToCartRequest(String email, Long productId, int quantity) {
+    public AddToCartRequest() {}
+
+    public AddToCartRequest(String email, List<CartItemDto> items) {
         this.email = email;
-        this.productId = productId;
-        this.quantity = quantity;
-    }
-
-    public AddToCartRequest() {
+        this.items = items;
     }
 
     public String getEmail() {
@@ -23,19 +21,11 @@ public class AddToCartRequest {
         this.email = email;
     }
 
-    public Long getProductId() {
-        return productId;
+    public List<CartItemDto> getItems() {
+        return items;
     }
 
-    public void setProductId(Long productId) {
-        this.productId = productId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setItems(List<CartItemDto> items) {
+        this.items = items;
     }
 }

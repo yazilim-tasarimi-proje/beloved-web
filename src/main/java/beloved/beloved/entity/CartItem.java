@@ -15,7 +15,7 @@ public class CartItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private BigDecimal quantity;
+    private int quantity;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
@@ -25,7 +25,7 @@ public class CartItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    public CartItem(Long id, BigDecimal quantity, Cart cart, Product product) {
+    public CartItem(Long id, int quantity, Cart cart, Product product) {
         this.id = id;
         this.quantity = quantity;
         this.cart = cart;
@@ -41,11 +41,11 @@ public class CartItem {
         this.id = id;
     }
 
-    public BigDecimal getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 

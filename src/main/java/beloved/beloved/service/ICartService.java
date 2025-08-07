@@ -1,9 +1,11 @@
 package beloved.beloved.service;
-
 import beloved.beloved.dto.CartDto;
+import beloved.beloved.dto.CartItemDto;
+import java.util.List;
+
 
 public interface ICartService {
-    public CartDto addToCart(String email, Long productId, int quantity);
-    public CartDto getCart(String email);
-    public CartDto removeFromCart(String email, Long productId);
+    CartDto addToCart(String email, List<CartItemDto> items);
+    CartDto getCart(String email);
+    CartDto removeFromCart(String email, Long productId);
 }

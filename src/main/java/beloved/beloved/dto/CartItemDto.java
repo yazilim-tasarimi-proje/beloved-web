@@ -7,12 +7,12 @@ public class CartItemDto {
     private Long productId;
     private String productName;
     private BigDecimal productPrice;
-    private BigDecimal quantity;
+    private int quantity;
 
     public CartItemDto() {
     }
 
-    public CartItemDto(Long id, Long productId, String productName, BigDecimal productPrice, BigDecimal quantity) {
+    public CartItemDto(Long id, Long productId, String productName, BigDecimal productPrice, int quantity) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
@@ -52,11 +52,11 @@ public class CartItemDto {
         this.productPrice = productPrice;
     }
 
-    public BigDecimal getQuantity() {
+    public int getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(BigDecimal quantity) {
+    public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
 }

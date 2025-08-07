@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.FetchType;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -21,7 +23,7 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private int price;
+    private BigDecimal price;
     private LocalDateTime orderDate;
 
     @ManyToOne
@@ -32,7 +34,7 @@ public class Order {
     private Set<OrderItem> orderItemSet= new HashSet<>();
 
 
-    public Order(Long id, int price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet) {
+    public Order(Long id, BigDecimal price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet) {
         this.id = id;
         this.price = price;
         this.orderDate = orderDate;
@@ -50,11 +52,11 @@ public class Order {
         this.id = id;
     }
 
-    public int getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

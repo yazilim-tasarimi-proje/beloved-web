@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -33,14 +34,11 @@ public class CartService implements ICartService {
         this.productRepository = productRepository;
     }
 
-    // Ürünü Sepete Ekle
+    // Çoklu ürün sepete ekleme
     @Override
-    public CartDto addToCart(String email, Long productId, int quantity) {
+    public CartDto addToCart(String email, List<CartItemDto> items) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
 
         Cart cart = cartRepository.findByUser(user)
                 .orElseGet(() -> {
@@ -51,28 +49,32 @@ public class CartService implements ICartService {
                     return cartRepository.save(newCart);
                 });
 
-        CartItem existingItem = cart.getCartItems().stream()
-                .filter(item -> item.getProduct().equals(product))
-                .findFirst()
-                .orElse(null);
+        for (CartItemDto itemDto : items) {
+            Product product = productRepository.findById(itemDto.getProductId())
+                    .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        if (existingItem != null) {
-            // existingItem.getQuantity() ve quantity BigDecimal olmalı
-            existingItem.setQuantity(existingItem.getQuantity().add(BigDecimal.valueOf(quantity)));
-        } else {
-            CartItem newItem = new CartItem();
-            newItem.setProduct(product);
-            newItem.setQuantity(BigDecimal.valueOf(quantity));
-            newItem.setCart(cart);
-            cart.getCartItems().add(newItem);
+            CartItem existingItem = cart.getCartItems().stream()
+                    .filter(i -> i.getProduct().equals(product))
+                    .findFirst()
+                    .orElse(null);
+
+            if (existingItem != null) {
+                existingItem.setQuantity(existingItem.getQuantity() + itemDto.getQuantity());
+            } else {
+                CartItem newItem = new CartItem();
+                newItem.setProduct(product);
+                newItem.setQuantity(itemDto.getQuantity());
+                newItem.setCart(cart);
+                cart.getCartItems().add(newItem);
+            }
         }
 
-
         cartRepository.save(cart);
+
         return entityToDto(cart);
     }
 
-    // Sepeti Listele
+    // Sepeti listele
     @Override
     public CartDto getCart(String email) {
         User user = userRepository.findByEmail(email)
@@ -90,7 +92,7 @@ public class CartService implements ICartService {
         return entityToDto(cart);
     }
 
-    // Sepetten Ürün Kaldır
+    // Sepetten ürün kaldır
     @Override
     public CartDto removeFromCart(String email, Long productId) {
         User user = userRepository.findByEmail(email)
@@ -105,26 +107,25 @@ public class CartService implements ICartService {
         return entityToDto(cart);
     }
 
-    // Entity -> DTO Dönüşümleri
+    // Entity -> DTO dönüşümü
     private CartDto entityToDto(Cart cart) {
         Set<CartItemDto> itemDtos = cart.getCartItems().stream()
                 .map(this::entityToDto)
                 .collect(Collectors.toSet());
 
         BigDecimal totalPrice = itemDtos.stream()
-                .map(i -> i.getProductPrice().multiply(i.getQuantity()))
+                .map(i -> i.getProductPrice().multiply(BigDecimal.valueOf(i.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         CartDto dto = new CartDto();
-         dto.setCreatedAt(cart.getCreatedAt());  // Eğer CartDto'da LocalDateTime ise
-
+        dto.setCreatedAt(cart.getCreatedAt());
         dto.setCartItems(itemDtos);
         dto.setTotalPrice(totalPrice);
         dto.setDiscount(BigDecimal.ZERO);
         dto.setDiscountPrice(totalPrice);
+
         return dto;
     }
-
 
     private CartItemDto entityToDto(CartItem item) {
         Product product = item.getProduct();
@@ -137,4 +138,3 @@ public class CartService implements ICartService {
         );
     }
 }
-
