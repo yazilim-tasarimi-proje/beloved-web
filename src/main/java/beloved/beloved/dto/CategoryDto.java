@@ -3,10 +3,12 @@ package beloved.beloved.dto;
 public class CategoryDto {
     private String name;
     private Long id;
+    private Long parentId;
 
-    public CategoryDto(String name  , Long id) {
+    public CategoryDto(String name  , Long id, Long parentId) {
         this.name = name;
         this.id = id;
+        this.parentId = parentId;
     }
 
     public CategoryDto() {
@@ -24,5 +26,11 @@ public class CategoryDto {
     }
     public void setId(Long id) {
         this.id = id;
+    }
+    public Long getParentId() {
+        return parentId;
+    }
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 }

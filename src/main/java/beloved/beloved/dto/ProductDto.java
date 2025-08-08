@@ -12,8 +12,10 @@ public class ProductDto {
     private String description;
     private String imageUrl;
     private Long  categoryId;
+    private Boolean isPersonalized;
+    private String productType;
 
-    public ProductDto(String name, BigDecimal price, int stock, String description, String imageUrl, Long id, Long categoryId) {
+    public ProductDto(String name, BigDecimal price, int stock, String description, String imageUrl, Long id, Long categoryId, boolean isPersonalized, String productType) {
         this.name = name;
         this.price = price;
         this.stock = stock;
@@ -21,6 +23,8 @@ public class ProductDto {
         this.imageUrl = imageUrl;
         this.id = id;
         this.categoryId = categoryId;
+        this.isPersonalized = isPersonalized;
+        this.productType = productType;
     }
 
     public ProductDto() {
@@ -80,5 +84,21 @@ public class ProductDto {
 
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public Boolean getPersonalized() {
+        return isPersonalized;
+    }
+
+    public void setPersonalized(Boolean personalized) {
+        isPersonalized = personalized;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }

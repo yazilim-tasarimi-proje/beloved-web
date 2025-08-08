@@ -59,6 +59,21 @@ public class CategoryController {
         Category category = categoryService.getById(id);
         return ResponseEntity.ok(category);
     }
+    @PostMapping("/{parentId}/subcategories/add")
+    public ResponseEntity<CategoryDto> addSubCategory(@PathVariable Long parentId, @RequestBody CategoryDto subCategoryDto) {
+        return ResponseEntity.ok(categoryService.addSubCategory(parentId, subCategoryDto));
+    }
+
+    @GetMapping("/{parentId}/subcategories")
+    public ResponseEntity<List<CategoryDto>> listSubCategories(@PathVariable Long parentId) {
+        return ResponseEntity.ok(categoryService.listSubCategories(parentId));
+    }
+
+    @DeleteMapping("/{parentId}/subcategories/{subCategoryId}")
+    public ResponseEntity<String> deleteSubCategory(@PathVariable Long parentId, @PathVariable Long subCategoryId) {
+        categoryService.deleteSubCategory(parentId, subCategoryId);
+        return ResponseEntity.ok("Subcategory deleted successfully");
+    }
 
 
 

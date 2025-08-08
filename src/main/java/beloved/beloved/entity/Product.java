@@ -26,6 +26,8 @@ public class Product {
     private int stock;
     private String description;
     private String imageUrl;
+    private Boolean isPersonalized;
+    private String productType;
 
     @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
     private Set<OrderItem> orderItemSet=new HashSet<>();
@@ -49,20 +51,15 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<CartItem> cartItemSet =new HashSet<>();
 
-    public Product(Long id, String name, BigDecimal price, int stock, String description, String imageUrl, Set<OrderItem> orderItemSet, Category category, Set<Recommendation> recommendations, List<Image> imageList, Set<Favorite> favoriteList, Set<Review> reviewList, Set<CartItem> cartItemSet) {
+    public Product(Long id, String name, BigDecimal price, int stock, String description, String imageUrl, Boolean isPersonalized, String productType) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.orderItemSet = orderItemSet;
-        this.category = category;
-        this.recommendations = recommendations;
-        this.imageList = imageList;
-        this.favoriteList = favoriteList;
-        this.reviewList = reviewList;
-        this.cartItemSet = cartItemSet;
+        this.isPersonalized = isPersonalized;
+        this.productType = productType;
     }
     public Product() {}
 
@@ -168,5 +165,21 @@ public class Product {
 
     public void setCartItemSet(Set<CartItem> cartItemSet) {
         this.cartItemSet = cartItemSet;
+    }
+
+    public Boolean isPersonalized() {
+        return isPersonalized;
+    }
+
+    public void setPersonalized(Boolean personalized) {
+        isPersonalized = personalized;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 }

@@ -1,6 +1,7 @@
 package beloved.beloved.controller;
 
 import beloved.beloved.dto.ProductDto;
+import beloved.beloved.dto.ProductFilterDto;
 import beloved.beloved.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +54,11 @@ public class ProductController {
             return ResponseEntity.status(404).body("Product not found");
         }
     }
+    @PostMapping("/filter")
+    public ResponseEntity<List<ProductDto>> filterProducts(@RequestBody ProductFilterDto filterDto) {
+        List<ProductDto> filteredProducts = productService.filterProducts(filterDto);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
 
 }
