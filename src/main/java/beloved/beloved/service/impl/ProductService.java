@@ -2,7 +2,6 @@ package beloved.beloved.service.impl;
 
 import beloved.beloved.dto.ProductDto;
 import beloved.beloved.dto.ProductFilterDto;
-import beloved.beloved.entity.Category;
 import beloved.beloved.entity.Product;
 import beloved.beloved.repository.ProductRepository;
 import beloved.beloved.service.ICategoryService;
@@ -23,49 +22,11 @@ public class ProductService implements IProductService {
     @Autowired
     private ICategoryService categoryService;
 
-    private Product dtoToEntity(ProductDto productDto) {
-        Product product = new Product();
-        product.setId(productDto.getId());
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        product.setImageUrl(productDto.getImageUrl());
-        product.setStock(productDto.getStock());
-
-        product.setPersonalized(productDto.getPersonalized() != null ? productDto.getPersonalized() : false);
-        product.setProductType(productDto.getProductType());
-
-        if (productDto.getCategoryId() != null) {
-            Category category = categoryService.getById(productDto.getCategoryId());
-            product.setCategory(category);
-        }
-
-        return product;
-    }
-
-    private ProductDto entityToDto(Product product) {
-        ProductDto dto = new ProductDto();
-        dto.setId(product.getId());
-        dto.setName(product.getName());
-        dto.setDescription(product.getDescription());
-        dto.setPrice(product.getPrice());
-        dto.setImageUrl(product.getImageUrl());
-        dto.setStock(product.getStock());
-
-        dto.setPersonalized(product.isPersonalized());
-        dto.setProductType(product.getProductType());
-
-        if (product.getCategory() != null) {
-            dto.setCategoryId(product.getCategory().getId());
-        }
-        return dto;
-    }
-
     @Override
     public ProductDto addProduct(ProductDto productDto) {
-        Product product = dtoToEntity(productDto);
+        Product product = ProductFactory.dtoToEntity(productDto, categoryService);
         Product savedProduct = productRepository.save(product);
-        return entityToDto(savedProduct);
+        return ProductFactory.entityToDto(savedProduct);
     }
 
     @Override
@@ -73,22 +34,10 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        product.setName(productDto.getName());
-        product.setDescription(productDto.getDescription());
-        product.setPrice(productDto.getPrice());
-        product.setImageUrl(productDto.getImageUrl());
-        product.setStock(productDto.getStock());
-
-        product.setPersonalized(productDto.getPersonalized() != null ? productDto.getPersonalized() : false);
-        product.setProductType(productDto.getProductType());
-
-        if (productDto.getCategoryId() != null) {
-            Category category = categoryService.getById(productDto.getCategoryId());
-            product.setCategory(category);
-        }
+        ProductFactory.updateEntityFromDto(product, productDto, categoryService);
 
         Product updatedProduct = productRepository.save(product);
-        return entityToDto(updatedProduct);
+        return ProductFactory.entityToDto(updatedProduct);
     }
 
     @Override
@@ -102,7 +51,7 @@ public class ProductService implements IProductService {
     @Override
     public List<ProductDto> listProducts() {
         return productRepository.findAll().stream()
-                .map(this::entityToDto)
+                .map(ProductFactory::entityToDto)
                 .collect(Collectors.toList());
     }
 
@@ -127,6 +76,6 @@ public class ProductService implements IProductService {
         }
 
         List<Product> products = productRepository.findAll(spec);
-        return products.stream().map(this::entityToDto).collect(Collectors.toList());
+        return products.stream().map(ProductFactory::entityToDto).collect(Collectors.toList());
     }
 }
