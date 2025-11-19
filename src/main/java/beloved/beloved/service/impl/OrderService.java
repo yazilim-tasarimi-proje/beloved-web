@@ -3,9 +3,12 @@ package beloved.beloved.service.impl;
 import beloved.beloved.dto.OrderDto;
 import beloved.beloved.dto.OrderItemDto;
 import beloved.beloved.entity.*;
-import beloved.beloved.repository.*;
+import beloved.beloved.repository.CartRepository;
+import beloved.beloved.repository.OrderRepository;
+import beloved.beloved.repository.UserRepository;
 import beloved.beloved.service.IOrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,19 +31,36 @@ public class OrderService implements IOrderService {
         this.cartRepository = cartRepository;
     }
 
-    // 1. Sipariş Oluştur
     @Override
+    @Transactional //Yapılan DB işlemlerinde eksik ve hatalı işlem varsa o veri geri döndürülür. Veritabanında hatalı
+    // veri kalmaz.
     public OrderDto placeOrder(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() -> new RuntimeException("Cart not found"));
+        User user = findUserByEmail(email);
+        Cart cart = findCartByUser(user);
 
         if (cart.getCartItems().isEmpty()) {
             throw new RuntimeException("Cart is empty");
         }
 
+        Order order = createOrderFromCart(user, cart);
+        orderRepository.save(order);
+
+        clearCart(cart);
+
+        return entityToDto(order);
+    }
+
+    private User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    private Cart findCartByUser(User user) {
+        return cartRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Cart not found"));
+    }
+
+    private Order createOrderFromCart(User user, Cart cart) {
         Order order = new Order();
         order.setUser(user);
         order.setOrderDate(LocalDateTime.now());
@@ -50,30 +70,32 @@ public class OrderService implements IOrderService {
                     OrderItem item = new OrderItem();
                     item.setOrder(order);
                     item.setProduct(cartItem.getProduct());
-                    item.setQuantity(cartItem.getQuantity());  // quantity int kalabilir
+                    item.setQuantity(cartItem.getQuantity());
                     return item;
                 })
                 .collect(Collectors.toSet());
 
-        // Toplam fiyatı BigDecimal olarak hesapla
-        BigDecimal totalPrice = cart.getCartItems().stream()
+        BigDecimal totalPrice = calculateTotalPrice(cart);
+
+        order.setPrice(totalPrice);
+        order.setOrderItemSet(orderItems);
+        return order;
+    }
+
+    private BigDecimal calculateTotalPrice(Cart cart) {
+        return cart.getCartItems().stream()
                 .map(cartItem -> cartItem.getProduct().getPrice()
                         .multiply(BigDecimal.valueOf(cartItem.getQuantity())))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
-        order.setPrice(totalPrice); // price BigDecimal olmalı
-        order.setOrderItemSet(orderItems);
-
-        orderRepository.save(order);
-
+    private void clearCart(Cart cart) {
         // Sepeti temizle
         cart.getCartItems().clear();
         cartRepository.save(cart);
-
-        return entityToDto(order);
     }
 
-    // 2. Sipariş İptal Et
+
     @Override
     public void cancelOrder(Long orderId) {
         if (!orderRepository.existsById(orderId)) {
@@ -82,18 +104,14 @@ public class OrderService implements IOrderService {
         orderRepository.deleteById(orderId);
     }
 
-    // 3. Kullanıcının Siparişlerini Listele
     @Override
     public List<OrderDto> getUserOrders(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
+        User user = findUserByEmail(email);
         return orderRepository.findByUser(user).stream()
                 .map(this::entityToDto)
                 .collect(Collectors.toList());
     }
 
-    // Dönüştürücü metot
     private OrderDto entityToDto(Order order) {
         Set<OrderItemDto> itemDtos = order.getOrderItemSet().stream()
                 .map(item -> new OrderItemDto(
@@ -106,7 +124,7 @@ public class OrderService implements IOrderService {
         OrderDto dto = new OrderDto();
         dto.setOrderId(order.getId());
         dto.setEmail(order.getUser().getEmail());
-        dto.setTotalPrice(order.getPrice()); // BigDecimal tipiyle uyumlu olmalı
+        dto.setTotalPrice(order.getPrice());
         dto.setOrderDate(order.getOrderDate());
         dto.setItems(itemDtos);
         return dto;
