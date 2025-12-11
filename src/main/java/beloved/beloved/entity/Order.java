@@ -1,5 +1,12 @@
 package beloved.beloved.entity;
 
+import beloved.beloved.service.IOrderState;
+import beloved.beloved.service.impl.CancelledState;
+import beloved.beloved.service.impl.CreatedState;
+import beloved.beloved.service.impl.PaidState;
+import beloved.beloved.service.impl.ShippedState;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Entity;
@@ -33,6 +40,20 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<OrderItem> orderItemSet= new HashSet<>();
 
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status = OrderStatus.CREATED;
+
+    //veritabanındaki Enum'a bakıp canlı State nesnesini üretilir.
+    //Spring Bean olmadıkları için 'new' ile üretilir.
+    public IOrderState getOrderState() {
+        switch (this.status) {
+            case CREATED: return new CreatedState();
+            case PAID:    return new PaidState();
+            case SHIPPED: return new ShippedState();
+            case CANCELLED: return new CancelledState();
+            default: return new CreatedState();
+        }
+    }
 
     public Order(Long id, BigDecimal price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet) {
         this.id = id;
@@ -80,6 +101,22 @@ public class Order {
     }
     public void setOrderItemSet(Set<OrderItem> orderItemSet) {
         this.orderItemSet = orderItemSet;
+    }
+    public void pay() {
+        getOrderState().pay(this);
+    }
+
+    public void ship() {
+        getOrderState().ship(this);
+    }
+
+    public void cancel() {
+        getOrderState().cancel(this);
+    }
+
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }
 
