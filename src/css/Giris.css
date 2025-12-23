@@ -1,0 +1,103 @@
+/* =========================================
+   GENEL SAYFA AYARLARI
+   ========================================= */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #fff;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+/* Sayfayı dikey ve yatayda tam ortalayan dış sarmalayıcı */
+.giris-page-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100vw;
+    height: 100vh;
+}
+
+/* =========================================
+   CONTAINER (KUTU) AYARLARI
+   ========================================= */
+.home-container {
+    /* Genişlik ve Boyu ekranın tam %50'si yapmak için vh/vw kullanıyoruz */
+    width: 50vw; 
+    height: 65vh;
+    
+    /* ÖNEMLİ: İçeriğin dışarı taşmasını engellemek için */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* İçeriği dikeyde ortalar */
+    align-items: center;     /* İçeriği yatayda ortalar */
+    
+    padding: 20px;
+    border-radius: 20px;
+    background: #eee2ea;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box; /* Padding'in kutuyu büyütmesini engeller */
+    overflow: hidden;       /* Yine de taşma olursa keser */
+}
+
+/* =========================================
+   LOGO VE BAŞLIK
+   ========================================= */
+.home-logo {
+    width: 120px; 
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 15px;
+}
+
+.home-title {
+    font-size: clamp(20px, 4vh, 28px); /* Yazı boyutu ekrana göre ölçeklenir */
+    font-weight: bold;
+    color: #d34794;
+    margin-bottom: 30px;
+}
+
+/* =========================================
+   BUTONLAR
+   ========================================= */
+.home-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;      /* Butonlar arası boşluğu biraz daralttık */
+    width: 90%;     /* Butonlar kutu genişliğinin %90'ı olsun */
+    max-width: 400px; /* Çok geniş ekranda butonlar devasa olmasın */
+}
+
+.home-button {
+    width: 100%;
+    padding: 12px;  /* Yüksekliği kutuya uydurmak için padding'i azalttık */
+    background-color: #e760aa; /* Her iki buton da artık aynı renk */
+    color: white;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* Her iki butonun rengini aynı yapmak için özel sınıfları sıfırlıyoruz */
+.home-button:first-child,
+.home-button:last-child {
+    background-color: #e760aa;
+}
+
+.home-button:hover {
+    background-color: #c82b86;
+    transform: translateY(-2px);
+}
+
+/* =========================================
+   MOBİL UYUMLULUK (RESPONSIVE)
+   ========================================= */
+@media (max-width: 768px) {
+    .home-container {
+        width: 85vw; /* Mobilde %50 çok dar olacağı için %85 yapıyoruz */
+        height: 60vh;
+    }
+}

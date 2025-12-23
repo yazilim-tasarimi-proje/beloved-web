@@ -1,0 +1,83 @@
+/* Sayfa arka planı */
+body {
+    background-color: #fff7fa;
+}
+
+/* Form container */
+.login-container {
+  width: 550px;
+  height: 500px;
+  margin: 150px auto;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  text-align: center;
+  background: #eee2ea;
+}
+
+/* Başlık */
+.login-title {
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #d34794;
+}
+
+/* Form düzeni */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+/* Input tasarımı */
+.login-input {
+  padding: 15px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #9e7b88;
+  color: #000000;
+}
+
+/* Placeholder rengi */
+.login-input::placeholder {
+  color: #c7a4b8;
+  opacity: 1;
+}
+
+/* Input focus efekti */
+.login-input:focus {
+  outline: none !important;
+  border-color: #d6a4b6 !important;
+  box-shadow: 0 0 4px rgba(214, 164, 182, 0.6);
+}
+
+/* Buton tasarımı */
+.login-button {
+  padding: 15px;
+  background-color: #cd86af;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Buton hover efekti */
+.login-button:hover {
+  background-color: #d34794;
+}
+
+/* Mesaj yazısı */
+.login-message {
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+}
+.login-logo {
+  width: 130px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+}
+
