@@ -3,6 +3,7 @@ package beloved.beloved.dto;
 import beloved.beloved.entity.Category;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 public class ProductDto {
    private Long id;
@@ -15,16 +16,25 @@ public class ProductDto {
     private Boolean isPersonalized;
     private String productType;
 
-    public ProductDto(String name, BigDecimal price, int stock, String description, String imageUrl, Long id, Long categoryId, boolean isPersonalized, String productType) {
+
+    private java.util.Set<Long> suitableSpecialDayIds;
+    private java.util.Set<Long> suitableRelationTypeIds;
+    private String color;
+    private Integer minAge;
+    private Integer maxAge;
+
+
+    public ProductDto(Long id, String name, BigDecimal price, int stock, String description, String imageUrl, Long categoryId, Boolean isPersonalized, String productType) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.stock = stock;
         this.description = description;
         this.imageUrl = imageUrl;
-        this.id = id;
         this.categoryId = categoryId;
         this.isPersonalized = isPersonalized;
         this.productType = productType;
+
     }
 
     public ProductDto() {
@@ -100,5 +110,45 @@ public class ProductDto {
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public Set<Long> getSuitableSpecialDayIds() {
+        return suitableSpecialDayIds;
+    }
+
+    public void setSuitableSpecialDayIds(Set<Long> suitableSpecialDayIds) {
+        this.suitableSpecialDayIds = suitableSpecialDayIds;
+    }
+
+    public Set<Long> getSuitableRelationTypeIds() {
+        return suitableRelationTypeIds;
+    }
+
+    public void setSuitableRelationTypeIds(Set<Long> suitableRelationTypeIds) {
+        this.suitableRelationTypeIds = suitableRelationTypeIds;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public Integer getMinAge() {
+        return minAge;
+    }
+
+    public void setMinAge(Integer minAge) {
+        this.minAge = minAge;
+    }
+
+    public Integer getMaxAge() {
+        return maxAge;
+    }
+
+    public void setMaxAge(Integer maxAge) {
+        this.maxAge = maxAge;
     }
 }

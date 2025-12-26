@@ -1,4 +1,4 @@
-package beloved.beloved.service.impl;
+package beloved.beloved.service.impl.factory;
 
 import beloved.beloved.dto.OrderDto;
 import beloved.beloved.dto.OrderItemDto;

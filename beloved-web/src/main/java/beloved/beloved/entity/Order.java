@@ -25,6 +25,7 @@ public class Order {
     private Long id;
     private BigDecimal price;
     private LocalDateTime orderDate;
+    private OrderStatus status;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -34,12 +35,13 @@ public class Order {
     private Set<OrderItem> orderItemSet= new HashSet<>();
 
 
-    public Order(Long id, BigDecimal price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet) {
+    public Order(Long id, BigDecimal price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet, OrderStatus status) {
         this.id = id;
         this.price = price;
         this.orderDate = orderDate;
         this.user = user;
         this.orderItemSet = orderItemSet;
+        this.status = status;
     }
     public Order() {
     }
@@ -80,6 +82,13 @@ public class Order {
     }
     public void setOrderItemSet(Set<OrderItem> orderItemSet) {
         this.orderItemSet = orderItemSet;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }
 

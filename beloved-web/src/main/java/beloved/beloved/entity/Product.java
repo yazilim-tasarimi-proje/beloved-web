@@ -13,7 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.JoinTable;
 
 @Entity
 public class Product {
@@ -50,6 +51,21 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private Set<CartItem> cartItemSet =new HashSet<>();
+    @ManyToMany
+    @JoinTable(
+            name = "product_special_day",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "special_day_id")
+    )
+    private Set<SpecialDay> suitableSpecialDays = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "product_relation_type",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "relation_type_id")
+    )
+    private Set<RelationType> suitableRelationTypes = new HashSet<>();
 
     public Product(Long id, String name, BigDecimal price, int stock, String description, String imageUrl, Boolean isPersonalized, String productType) {
         this.id = id;
@@ -181,5 +197,25 @@ public class Product {
 
     public void setProductType(String productType) {
         this.productType = productType;
+    }
+
+    public Boolean getPersonalized() {
+        return isPersonalized;
+    }
+
+    public Set<SpecialDay> getSuitableSpecialDays() {
+        return suitableSpecialDays;
+    }
+
+    public void setSuitableSpecialDays(Set<SpecialDay> suitableSpecialDays) {
+        this.suitableSpecialDays = suitableSpecialDays;
+    }
+
+    public Set<RelationType> getSuitableRelationTypes() {
+        return suitableRelationTypes;
+    }
+
+    public void setSuitableRelationTypes(Set<RelationType> suitableRelationTypes) {
+        this.suitableRelationTypes = suitableRelationTypes;
     }
 }

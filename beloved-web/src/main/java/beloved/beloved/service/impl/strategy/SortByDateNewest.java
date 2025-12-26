@@ -1,7 +1,6 @@
-package beloved.beloved.strategy.impl;
+package beloved.beloved.service.impl.strategy;
 
 import beloved.beloved.entity.Review;
-import beloved.beloved.strategy.ReviewSortingStrategy;
 
 import java.util.Comparator;
 import java.util.List;

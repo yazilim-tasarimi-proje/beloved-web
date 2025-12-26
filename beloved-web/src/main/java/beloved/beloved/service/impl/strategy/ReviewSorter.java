@@ -1,4 +1,4 @@
-package beloved.beloved.strategy;
+package beloved.beloved.service.impl.strategy;
 
 import beloved.beloved.entity.Review;
 

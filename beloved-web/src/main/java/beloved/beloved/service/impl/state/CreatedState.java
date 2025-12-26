@@ -1,8 +1,7 @@
-package beloved.beloved.service.impl;
+package beloved.beloved.service.impl.state;
 
 import beloved.beloved.entity.Order;
 import beloved.beloved.entity.OrderStatus;
-import beloved.beloved.service.IOrderState;
 
 public class CreatedState implements IOrderState {
     @Override
