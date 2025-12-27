@@ -1,86 +1,91 @@
 package beloved.beloved.service.impl;
 
+import beloved.beloved.dto.ParsedGiftResponseDto;
 import beloved.beloved.dto.ProductDto;
-import beloved.beloved.dto.RecommendationRequestDto;
 import beloved.beloved.entity.Product;
 import beloved.beloved.repository.ProductRepository;
 import beloved.beloved.service.IRecommendationService;
+import beloved.beloved.service.impl.FastApiClientService;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class RecommendationService implements IRecommendationService {
 
+    private final FastApiClientService aiClient;
     private final ProductRepository productRepository;
 
-    public RecommendationService(ProductRepository productRepository) {
+    public RecommendationService(
+            FastApiClientService aiClient,
+            ProductRepository productRepository
+    ) {
+        this.aiClient = aiClient;
         this.productRepository = productRepository;
     }
 
     @Override
-    public List<ProductDto> recommend(RecommendationRequestDto request) {
+    public List<ProductDto> recommendFromText(String text) {
 
-        List<Product> products = productRepository.findAll();
+        ParsedGiftResponseDto ai = aiClient.parseText(text);
 
-        return products.stream()
-                .map(product -> {
-                    int score = 0;
-
-                    // 🔹 SpecialDay uyumu (en güçlü sinyal)
-                    if (request.getSpecialDayId() != null
-                            && product.getSuitableSpecialDays() != null
-                            && product.getSuitableSpecialDays()
-                            .stream()
-                            .anyMatch(sd -> sd.getId().equals(request.getSpecialDayId()))) {
-                        score += 40;
-                    }
-
-                    // 🔹 RelationType uyumu
-                    if (request.getRelationTypeId() != null
-                            && product.getSuitableRelationTypes() != null
-                            && product.getSuitableRelationTypes()
-                            .stream()
-                            .anyMatch(rt -> rt.getId().equals(request.getRelationTypeId()))) {
-                        score += 30;
-                    }
-
-                    // 🔹 Kategori uyumu
-                    if (request.getCategoryIds() != null
-                            && product.getCategory() != null
-                            && request.getCategoryIds().contains(product.getCategory().getId())) {
-                        score += 30;
-                    }
-
-                    // 🔹 Bütçe uyumu
-                    if (request.getMaxBudget() != null
-                            && product.getPrice() != null
-                            && product.getPrice().compareTo(request.getMaxBudget()) <= 0) {
-                        score += 20;
-                    }
-
-                    ProductDto dto = new ProductDto(
-                            product.getId(),
-                            product.getName(),
-                            product.getPrice(),
-                            product.getStock(),
-                            product.getDescription(),
-                            product.getImageUrl(),
-                            product.getCategory() != null ? product.getCategory().getId() : null,
-                            product.isPersonalized(),
-                            product.getProductType()
-                    );
-
-                    return new ScoredProduct(dto, score);
-                })
-                .sorted(Comparator.comparingInt(ScoredProduct::score).reversed())
-                .map(ScoredProduct::dto)
+        return productRepository.findAll().stream()
+                .map(p -> score(p, ai))
+                .filter(sp -> sp.score > 0)
+                .sorted(Comparator.comparingInt(Scored::score).reversed())
                 .limit(5)
-                .collect(Collectors.toList());
+                .map(sp -> toDto(sp.product))
+                .toList();
     }
 
-    // helper record (class scope’ta)
-    private record ScoredProduct(ProductDto dto, int score) {}
+    private Scored score(Product p, ParsedGiftResponseDto ai) {
+        int score = 0;
+
+        if (ai.getRelationType() != null &&
+                p.getSuitableRelationTypes().stream()
+                        .anyMatch(r -> r.getName().equals(ai.getRelationType()))) {
+            score += 30;
+        }
+
+        if (ai.getSpecialDay() != null &&
+                p.getSuitableSpecialDays().stream()
+                        .anyMatch(s -> s.getName().equals(ai.getSpecialDay()))) {
+            score += 40;
+        }
+
+        if (ai.getColor() != null &&
+                p.getDescription() != null &&
+                p.getDescription().toLowerCase().contains(ai.getColor())) {
+            score += 20;
+        }
+
+        if (ai.getMaxBudget() != null &&
+                p.getPrice().intValue() <= ai.getMaxBudget()) {
+            score += 10;
+        }
+
+        if (Boolean.TRUE.equals(ai.getPersonalized()) &&
+                Boolean.TRUE.equals(p.getPersonalized())) {
+            score += 10;
+        }
+
+        return new Scored(p, score);
+    }
+
+    private ProductDto toDto(Product p) {
+        return new ProductDto(
+                p.getId(),
+                p.getName(),
+                p.getPrice(),
+                p.getStock(),
+                p.getDescription(),
+                p.getImageUrl(),
+                p.getCategory() != null ? p.getCategory().getId() : null,
+                p.getPersonalized(),
+                p.getProductType()
+        );
+    }
+
+    private record Scored(Product product, int score) {}
 }

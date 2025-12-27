@@ -42,11 +42,10 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/products/**").permitAll()
                         .requestMatchers("/uploads/**").permitAll()
-                        .requestMatchers("/category/**").permitAll()
+                        .requestMatchers("/categories/**").permitAll()
                         .requestMatchers("/favorites/**").permitAll()
                         .requestMatchers("/orders/**").permitAll()
                         .requestMatchers("/api/notifications/**").permitAll()
-                        .requestMatchers("/api/addresses/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN") // ✅ ekledik
                         .requestMatchers("/admin/**").hasAnyAuthority("ROLE_ADMIN")
                         .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER")
                         .requestMatchers("/adminuser/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")

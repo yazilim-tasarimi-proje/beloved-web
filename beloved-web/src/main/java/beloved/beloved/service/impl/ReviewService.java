@@ -6,9 +6,9 @@ import beloved.beloved.entity.Review;
 import beloved.beloved.repository.ProductRepository;
 import beloved.beloved.repository.ReviewRepository;
 import beloved.beloved.service.IReviewService;
-import beloved.beloved.service.impl.strategy.ReviewSorter;
-import beloved.beloved.service.impl.strategy.SortByDateNewest;
-import beloved.beloved.service.impl.strategy.SortByRatingDesc;
+import beloved.beloved.service.impl.strategyReview.ReviewSorter;
+import beloved.beloved.service.impl.strategyReview.SortByDateNewest;
+import beloved.beloved.service.impl.strategyReview.SortByRatingDesc;
 
 import org.springframework.stereotype.Service;
 import java.util.List;

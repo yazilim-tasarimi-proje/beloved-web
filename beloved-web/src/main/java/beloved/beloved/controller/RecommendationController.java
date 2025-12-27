@@ -1,30 +1,24 @@
 package beloved.beloved.controller;
 
 import beloved.beloved.dto.ProductDto;
-import beloved.beloved.dto.RecommendationRequestDto;
-import beloved.beloved.service.impl.RecommendationService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import beloved.beloved.service.IRecommendationService;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/api/recommendations")
+@RequestMapping("/api/recommend")
 public class RecommendationController {
 
-    private final RecommendationService recommendationService;
+    private final IRecommendationService recommendationService;
 
-    public RecommendationController(RecommendationService recommendationService) {
+    public RecommendationController(IRecommendationService recommendationService) {
         this.recommendationService = recommendationService;
     }
 
     @PostMapping
-    public List<ProductDto> recommendProducts(
-            @RequestBody RecommendationRequestDto request
-    ) {
-        return recommendationService.recommend(request);
+    public List<ProductDto> recommend(@RequestBody Map<String, String> body) {
+        return recommendationService.recommendFromText(body.get("text"));
     }
 }
-

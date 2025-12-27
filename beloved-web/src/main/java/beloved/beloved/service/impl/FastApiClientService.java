@@ -1,4 +1,4 @@
-package beloved.beloved.service.impl.fastapi;
+package beloved.beloved.service.impl;
 
 import beloved.beloved.dto.ParsedGiftResponseDto;
 import org.springframework.stereotype.Service;
@@ -11,17 +11,10 @@ public class FastApiClientService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
-    public ParsedGiftResponseDto parseGiftText(String text) {
-
-        String url = "http://localhost:8000/parse-gift-text";
-
-        Map<String, String> requestBody = Map.of(
-                "text", text
-        );
-
+    public ParsedGiftResponseDto parseText(String text) {
         return restTemplate.postForObject(
-                url,
-                requestBody,
+                "http://localhost:8000/ai-recommend",
+                Map.of("text", text),
                 ParsedGiftResponseDto.class
         );
     }
