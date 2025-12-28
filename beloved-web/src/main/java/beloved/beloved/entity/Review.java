@@ -1,13 +1,6 @@
 package beloved.beloved.entity;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-
-
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -16,29 +9,41 @@ public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private int rating;
+
     private String comment;
+
     private LocalDateTime date;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    public Review(Long id, int rating, String comment, LocalDateTime date, Product product) {
-        this.id = id;
+
+    protected Review() {
+        // JPA için
+    }
+
+    private Review(int rating, String comment, Product product) {
         this.rating = rating;
         this.comment = comment;
-        this.date = date;
         this.product = product;
     }
-    public Review() {}
+
+
+
+    public static Review create(int rating, String comment, Product product) {
+        return new Review(rating, comment, product);
+    }
+
+    @PrePersist
+    public void onCreate() {
+        this.date = LocalDateTime.now();
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public int getRating() {
@@ -61,9 +66,6 @@ public class Review {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
-    }
 
     public Product getProduct() {
         return product;

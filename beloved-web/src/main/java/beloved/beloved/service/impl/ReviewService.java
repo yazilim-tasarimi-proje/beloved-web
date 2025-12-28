@@ -9,8 +9,8 @@ import beloved.beloved.service.IReviewService;
 import beloved.beloved.service.impl.strategyReview.ReviewSorter;
 import beloved.beloved.service.impl.strategyReview.SortByDateNewest;
 import beloved.beloved.service.impl.strategyReview.SortByRatingDesc;
-
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,33 +26,33 @@ public class ReviewService implements IReviewService {
         this.productRepository = productRepository;
     }
 
+
     @Override
     public ReviewDTO saveReview(ReviewDTO reviewDTO) {
 
         Product product = productRepository.findById(reviewDTO.getProductId())
                 .orElseThrow(() -> new RuntimeException("Product not found"));
 
-        Review review = new Review();
-        review.setRating(reviewDTO.getRating());
-        review.setComment(reviewDTO.getComment());
-        review.setDate(reviewDTO.getDate());
-        review.setProduct(product);
+        Review review = Review.create(
+                reviewDTO.getRating(),
+                reviewDTO.getComment(),
+                product
+        );
 
         Review saved = reviewRepository.save(review);
         return convertToDTO(saved);
     }
 
+
     @Override
     public ReviewDTO getReviewById(Long id) {
-        Review review = reviewRepository.findById(id)
+        return reviewRepository.findById(id)
+                .map(this::convertToDTO)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
-
-        return convertToDTO(review);
     }
 
     @Override
     public List<ReviewDTO> getReviewsByProductId(Long productId) {
-
         return reviewRepository.findByProductId(productId)
                 .stream()
                 .map(this::convertToDTO)
@@ -67,7 +67,8 @@ public class ReviewService implements IReviewService {
                 .collect(Collectors.toList());
     }
 
-    // ⭐ STRATEGY KULLANAN METOT
+
+    @Override
     public List<ReviewDTO> getReviewsSorted(Long productId, String sortBy) {
 
         List<Review> reviews = reviewRepository.findByProductId(productId);
@@ -84,11 +85,10 @@ public class ReviewService implements IReviewService {
                 break;
         }
 
-        List<Review> sorted = sorter.sort(reviews);
-
-        return sorted.stream()
+        return sorter.sort(reviews)
+                .stream()
                 .map(this::convertToDTO)
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -99,7 +99,6 @@ public class ReviewService implements IReviewService {
 
         review.setRating(reviewDTO.getRating());
         review.setComment(reviewDTO.getComment());
-        review.setDate(reviewDTO.getDate());
 
         if (reviewDTO.getProductId() != null) {
             Product product = productRepository.findById(reviewDTO.getProductId())
@@ -111,10 +110,12 @@ public class ReviewService implements IReviewService {
         return convertToDTO(updated);
     }
 
+
     @Override
     public void deleteReview(Long id) {
         reviewRepository.deleteById(id);
     }
+
 
     private ReviewDTO convertToDTO(Review review) {
         return new ReviewDTO(

@@ -1,20 +1,10 @@
 package beloved.beloved.entity;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.FetchType;
-
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "orders")
@@ -23,27 +13,88 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private BigDecimal price;
+
     private LocalDateTime orderDate;
+
+    @Enumerated(EnumType.STRING)
     private OrderStatus status;
+
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<OrderItem> orderItemSet= new HashSet<>();
+    @OneToMany(
+            mappedBy = "order",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY
+    )
+    private Set<OrderItem> orderItemSet = new HashSet<>();
 
+    protected Order() {
 
-    public Order(Long id, BigDecimal price, LocalDateTime orderDate, User user, Set<OrderItem> orderItemSet, OrderStatus status) {
-        this.id = id;
-        this.price = price;
-        this.orderDate = orderDate;
-        this.user = user;
-        this.orderItemSet = orderItemSet;
-        this.status = status;
     }
-    public Order() {
+
+    private Order(Builder builder) {
+        this.id = builder.id;
+        this.price = builder.price;
+        this.orderDate = builder.orderDate;
+        this.user = builder.user;
+        this.status = builder.status;
+        this.orderItemSet = builder.orderItemSet != null
+                ? builder.orderItemSet
+                : new HashSet<>();
+    }
+
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private BigDecimal price;
+        private LocalDateTime orderDate;
+        private User user;
+        private OrderStatus status;
+        private Set<OrderItem> orderItemSet = new HashSet<>();
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder price(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder orderDate(LocalDateTime orderDate) {
+            this.orderDate = orderDate;
+            return this;
+        }
+
+        public Builder user(User user) {
+            this.user = user;
+            return this;
+        }
+
+        public Builder status(OrderStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder orderItems(Set<OrderItem> orderItemSet) {
+            this.orderItemSet = orderItemSet;
+            return this;
+        }
+
+        public Order build() {
+            return new Order(this);
+        }
     }
 
     public Long getId() {
@@ -77,9 +128,11 @@ public class Order {
     public void setUser(User user) {
         this.user = user;
     }
+
     public Set<OrderItem> getOrderItemSet() {
         return orderItemSet;
     }
+
     public void setOrderItemSet(Set<OrderItem> orderItemSet) {
         this.orderItemSet = orderItemSet;
     }
@@ -87,8 +140,8 @@ public class Order {
     public OrderStatus getStatus() {
         return status;
     }
+
     public void setStatus(OrderStatus status) {
         this.status = status;
     }
 }
-

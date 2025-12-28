@@ -6,24 +6,32 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
+
+import java.time.LocalDateTime;
+
 @Entity
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String message;
+    private boolean read = false;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+
     public Notification() {
     }
 
-    public Notification(Long id, String message, User user) {
+    public Notification(Long id, String message, User user, boolean read, LocalDateTime createdAt) {
         this.id = id;
         this.message = message;
         this.user = user;
+        this.read = read;
+        this.createdAt = createdAt;
     }
 
     public User getUser() {
@@ -48,5 +56,20 @@ public class Notification {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }

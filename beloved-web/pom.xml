@@ -100,7 +100,12 @@
 			<artifactId>java-jwt</artifactId>
 			<version>4.4.0</version> <!-- en son stabil sürüm -->
 		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>beloved</groupId>
+            <artifactId>beloved</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 	<build>
 		<plugins>

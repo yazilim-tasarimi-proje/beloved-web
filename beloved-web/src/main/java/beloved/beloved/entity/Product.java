@@ -1,27 +1,20 @@
 package beloved.beloved.entity;
 
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.JoinTable;
+import java.util.*;
 
 @Entity
 public class Product {
 
+    /* ===================== */
+    /* CORE FIELDS */
+    /* ===================== */
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
     private BigDecimal price;
     private int stock;
@@ -30,27 +23,32 @@ public class Product {
     private Boolean isPersonalized;
     private String productType;
 
-    @OneToMany(mappedBy = "product" , cascade = CascadeType.ALL)
-    private Set<OrderItem> orderItemSet=new HashSet<>();
+    /* ===================== */
+    /* RELATIONS */
+    /* ===================== */
 
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @OneToMany(mappedBy = "product",cascade = CascadeType.ALL)
-    private Set<Recommendation> recommendations=new HashSet<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<OrderItem> orderItemSet = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<Image> imageList= new ArrayList<Image>();
+    private Set<Recommendation> recommendations = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<Favorite> favoriteList=new HashSet<>();
+    private List<Image> imageList = new ArrayList<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<Review> reviewList=new HashSet<>();
+    private Set<Favorite> favoriteList = new HashSet<>();
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private Set<CartItem> cartItemSet =new HashSet<>();
+    private Set<Review> reviewList = new HashSet<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private Set<CartItem> cartItemSet = new HashSet<>();
+
     @ManyToMany
     @JoinTable(
             name = "product_special_day",
@@ -67,17 +65,93 @@ public class Product {
     )
     private Set<RelationType> suitableRelationTypes = new HashSet<>();
 
-    public Product(Long id, String name, BigDecimal price, int stock, String description, String imageUrl, Boolean isPersonalized, String productType) {
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.stock = stock;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.isPersonalized = isPersonalized;
-        this.productType = productType;
+    /* ===================== */
+    /* CONSTRUCTORS */
+    /* ===================== */
+
+    protected Product() {
+        // JPA için zorunlu
     }
-    public Product() {}
+
+    private Product(Builder builder) {
+        this.id = builder.id;
+        this.name = builder.name;
+        this.price = builder.price;
+        this.stock = builder.stock;
+        this.description = builder.description;
+        this.imageUrl = builder.imageUrl;
+        this.isPersonalized = builder.isPersonalized;
+        this.productType = builder.productType;
+        this.category = builder.category;
+    }
+
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+
+        private Long id;
+        private String name;
+        private BigDecimal price;
+        private int stock;
+        private String description;
+        private String imageUrl;
+        private Boolean isPersonalized = false;
+        private String productType;
+        private Category category;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder price(BigDecimal price) {
+            this.price = price;
+            return this;
+        }
+
+        public Builder stock(int stock) {
+            this.stock = stock;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+
+        public Builder imageUrl(String imageUrl) {
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public Builder personalized(Boolean personalized) {
+            this.isPersonalized = personalized;
+            return this;
+        }
+
+        public Builder productType(String productType) {
+            this.productType = productType;
+            return this;
+        }
+
+        public Builder category(Category category) {
+            this.category = category;
+            return this;
+        }
+
+        public Product build() {
+            return new Product(this);
+        }
+    }
+
 
     public Long getId() {
         return id;
@@ -127,12 +201,20 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public Set<OrderItem> getOrderItemSet() {
-        return orderItemSet;
+    public Boolean getPersonalized() {
+        return isPersonalized;
     }
 
-    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
-        this.orderItemSet = orderItemSet;
+    public void setPersonalized(Boolean personalized) {
+        isPersonalized = personalized;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 
     public Category getCategory() {
@@ -141,6 +223,14 @@ public class Product {
 
     public void setCategory(Category category) {
         this.category = category;
+    }
+
+    public Set<OrderItem> getOrderItemSet() {
+        return orderItemSet;
+    }
+
+    public void setOrderItemSet(Set<OrderItem> orderItemSet) {
+        this.orderItemSet = orderItemSet;
     }
 
     public Set<Recommendation> getRecommendations() {
@@ -181,26 +271,6 @@ public class Product {
 
     public void setCartItemSet(Set<CartItem> cartItemSet) {
         this.cartItemSet = cartItemSet;
-    }
-
-    public Boolean isPersonalized() {
-        return isPersonalized;
-    }
-
-    public void setPersonalized(Boolean personalized) {
-        isPersonalized = personalized;
-    }
-
-    public String getProductType() {
-        return productType;
-    }
-
-    public void setProductType(String productType) {
-        this.productType = productType;
-    }
-
-    public Boolean getPersonalized() {
-        return isPersonalized;
     }
 
     public Set<SpecialDay> getSuitableSpecialDays() {

@@ -12,4 +12,5 @@ public interface IReviewService {
     List<ReviewDTO> getAllReviews();
     ReviewDTO updateReview(Long id,ReviewDTO reviewDTO);
     void deleteReview(Long id);
+    List<ReviewDTO> getReviewsSorted(Long productId, String sortBy);
 }
