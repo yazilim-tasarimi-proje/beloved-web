@@ -1,40 +1,34 @@
 package beloved.beloved.controller;
 
+import beloved.beloved.controller.Facade.OrderFacade;
 import beloved.beloved.dto.OrderDto;
-import beloved.beloved.service.IOrderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 
-    private final IOrderService orderService;
+    private final OrderFacade orderFacade;
 
-    public OrderController(IOrderService orderService) {
-        this.orderService = orderService;
+    public OrderController(OrderFacade orderFacade) {
+        this.orderFacade = orderFacade;
     }
 
-    // 1. Sipariş Oluştur
     @PostMapping("/place")
     public ResponseEntity<OrderDto> placeOrder(@RequestParam String email) {
-        OrderDto order = orderService.placeOrder(email);
-        return ResponseEntity.ok(order);
+        return ResponseEntity.ok(orderFacade.placeOrder(email));
     }
 
-    // 2. Sipariş İptal Et
     @DeleteMapping("/{orderId}")
     public ResponseEntity<String> cancelOrder(@PathVariable Long orderId) {
-        orderService.cancelOrder(orderId);
+        orderFacade.cancelOrder(orderId);
         return ResponseEntity.ok("Order cancelled successfully");
     }
 
-    // 3. Kullanıcının Siparişlerini Listele
-    @GetMapping
-    public ResponseEntity<List<OrderDto>> getOrders(@RequestParam String email) {
-        List<OrderDto> orders = orderService.getUserOrders(email);
-        return ResponseEntity.ok(orders);
+    @GetMapping("/user")
+    public ResponseEntity<List<OrderDto>> getUserOrders(@RequestParam String email) {
+        return ResponseEntity.ok(orderFacade.getUserOrders(email));
     }
 }
