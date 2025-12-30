@@ -1,16 +1,24 @@
+/* Sayfa Genel Yapısı */
+.main-layout-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #fff7fa; /* Sayfa arka planı */
+}
+
 .favorite-page-container {
     max-width: 1200px;
-    margin: 50px auto;
+    margin: 40px auto 100px auto; /* Topbar payı */
     padding: 20px;
-    font-family: 'Poppins', sans-serif;
+    flex: 1;
 }
 
 .fav-title {
     font-size: 2rem;
-    color: #2c3e50;
+    color: #d34794; /* Başlık pembe */
     margin-bottom: 30px;
     text-align: center;
-    border-bottom: 2px solid #eee;
+    border-bottom: 2px solid #eee2ea;
     padding-bottom: 10px;
 }
 
@@ -20,14 +28,15 @@
     gap: 25px;
 }
 
+/* Kart Tasarımı */
 .fav-card {
     background: #fff;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 15px rgba(211, 71, 148, 0.1);
     transition: transform 0.3s ease;
     position: relative;
-    border: 1px solid #f0f0f0;
+    border: 1px solid #eee2ea;
 }
 
 .fav-card:hover {
@@ -37,94 +46,74 @@
 .fav-image-wrapper {
     position: relative;
     height: 200px;
-    background: #f8f9fa;
-}
-
-.fav-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 10px;
+    background: #fcfcfc;
 }
 
 .remove-fav-btn {
     position: absolute;
     top: 10px;
     right: 10px;
-    background: #ff4757;
+    background: #ff4757; /* Silme butonu kırmızı kalabilir veya koyu pembe yapılabilir */
     color: white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 32px;
+    height: 32px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background 0.2s;
+    transition: 0.2s;
 }
 
 .remove-fav-btn:hover {
-    background: #ff6b81;
+    background: #d34794;
+    transform: scale(1.1);
 }
 
+/* Detaylar ve Butonlar */
 .fav-details {
     padding: 15px;
     text-align: center;
-}
-
-.fav-details h3 {
-    font-size: 1.1rem;
-    color: #333;
-    margin-bottom: 10px;
-}
-
-.fav-details p {
-    font-size: 0.9rem;
-    color: #777;
-    margin-bottom: 15px;
+    background-color: #fff;
 }
 
 .view-detail-btn {
     display: inline-block;
-    padding: 8px 20px;
-    background-color: #2c3e50;
+    padding: 10px 25px;
+    background-color: #cd86af; /* Açık pembe buton */
     color: white;
     text-decoration: none;
     border-radius: 25px;
     font-size: 0.9rem;
-    transition: background 0.3s;
+    transition: 0.3s;
+    font-weight: 500;
 }
 
 .view-detail-btn:hover {
-    background-color: #34495e;
-}
-
-.empty-fav {
-    text-align: center;
-    padding: 50px;
+    background-color: #d34794; /* Koyu pembe hover */
 }
 
 .go-shopping-btn {
     display: inline-block;
     margin-top: 20px;
     padding: 12px 30px;
-    background-color: #27ae60;
+    background-color: #d34794;
     color: white;
     text-decoration: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-weight: bold;
+    transition: 0.3s;
 }
 
-.fav-error {
-    color: #e74c3c;
-    text-align: center;
+.go-shopping-btn:hover {
+    background-color: #cd86af;
 }
 
 .fav-loader {
     text-align: center;
     padding: 100px;
     font-size: 1.2rem;
-    color: #999;
+    color: #d34794;
 }

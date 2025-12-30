@@ -25,11 +25,34 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      await axios.post("http://localhost:8080/auth/login", form);
-      setMessage("Login successful!");
-      navigate("/home");     // 🔥 Home1'e yönlendirme
+      // 🚀 1. Gelen cevabı bir değişkene (response) atıyoruz
+      const response = await axios.post("http://localhost:8080/auth/login", form);
+      
+      console.log("Sunucu yanıtı:", response.data);
+
+      // 🚀 2. Eğer backend'den token geldiyse Local Storage'a kaydediyoruz
+      if (response.data.token) {
+        localStorage.setItem("token", response.data.token);
+        
+        // Varsa rol bilgisini de kaydedebilirsin (Profil sayfası yetkileri için iyi olur)
+        if (response.data.role) {
+          localStorage.setItem("role", response.data.role);
+        }
+
+        setMessage("Login successful!");
+        
+        // 🚀 3. Token kaydedildikten sonra yönlendirme yapıyoruz
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000);
+      } else {
+        setMessage("Token bulunamadı. Backend yanıtını kontrol edin.");
+      }
+
     } catch (error) {
-      setMessage(error.response?.data || "Login failed.");
+      // 🚀 4. Obje hatasını stringe çevirerek React'in çökmesini engelliyoruz
+      const errorMsg = error.response?.data?.message || error.response?.data || "Login failed.";
+      setMessage(String(errorMsg));
     }
   };
 

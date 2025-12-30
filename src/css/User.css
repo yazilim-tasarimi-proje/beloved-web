@@ -9,7 +9,7 @@
     text-align: center;
     margin-bottom: 40px;
     padding: 30px;
-    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    background: linear-gradient(135deg, #d34794, #5e56d3);
     color: white;
     border-radius: 20px;
     box-shadow: 0 10px 20px rgba(108, 92, 231, 0.2);
@@ -89,12 +89,12 @@ button {
 }
 
 .btn-update {
-    background-color: #6c5ce7;
+    background-color: #d34794;
     color: white;
 }
 
 .btn-password {
-    background-color: #2d3436;
+    background-color: #e152a1;
     color: white;
 }
 
